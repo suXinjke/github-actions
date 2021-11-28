@@ -1,0 +1,44 @@
+name: Build Node Application
+inputs:
+  node-version:
+    required: false
+    default: '14'
+  repository:
+    type: string
+    required: true
+  npm-run-command:
+    type: string
+    required: false
+    default: 'build'
+  directory:
+    type: string
+    required: false
+    default: 'remote'
+  ref:
+    type: string
+    required: false
+    default: ''
+  fetch-depth:
+    type: number
+    required: false
+    default: 1
+runs:
+  using: composite
+  steps:
+    - name: Setup node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: ${{ inputs.node-version }}
+    - name: Download application source code
+      uses: actions/checkout@v2
+      with:
+        path: ${{ inputs.directory }}
+        repository: ${{ inputs.repository }}
+        ref: ${{ inputs.ref }}
+        fetch-depth: ${{ inputs.fetch-depth }}
+    - name: Build the application
+      shell: bash
+      run: |
+        cd ${{ inputs.directory }}
+        npm ci
+        npm run ${{ inputs.npm-run-command }}

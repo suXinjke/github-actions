@@ -1,0 +1,43 @@
+name: Push copy
+inputs:
+  source-path:
+    type: string
+    required: true
+  target-path:
+    type: string
+    default: 'target'
+  target-sub-path:
+    type: string
+    required: true
+  cleanup:
+    type: boolean
+    default: true
+  pre-push-run:
+    type: string
+    required: false
+runs:
+  using: composite
+  steps:
+    - name: Download target repository
+      uses: actions/checkout@v2
+      with:
+        path: ${{ inputs.target-path }}
+    - name: Cleanup
+      shell: bash
+      if: inputs.cleanup == 1
+      run: rm -rf ${{ inputs.target-path }}/${{ inputs.target-sub-path }}
+    - name: Pre push run
+      shell: bash
+      if: inputs.pre-push-run
+      run: ${{ inputs.pre-push-run }}
+    - name: Push copy
+      shell: bash
+      run: |
+        mkdir -p ${{ inputs.target-path }}/${{ inputs.target-sub-path }}
+        cp -r ${{ inputs.source-path }} ${{ inputs.target-path }}/${{ inputs.target-sub-path }}
+        cd ${{ inputs.target-path }}/${{ inputs.target-sub-path }}
+        git config user.name github-actions
+        git config user.email github-actions@github.com
+        git add .
+        git commit -m "Automatic push copy"
+        git push
