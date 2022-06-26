@@ -2,7 +2,7 @@ name: Build Node Application
 inputs:
   node-version:
     required: false
-    default: '14'
+    default: '16'
   repository:
     type: string
     required: true
