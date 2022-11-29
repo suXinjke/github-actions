@@ -26,11 +26,11 @@ runs:
   using: composite
   steps:
     - name: Setup node.js
-      uses: actions/setup-node@v2
+      uses: actions/setup-node@v3
       with:
         node-version: ${{ inputs.node-version }}
     - name: Download application source code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         path: ${{ inputs.directory }}
         repository: ${{ inputs.repository }}
