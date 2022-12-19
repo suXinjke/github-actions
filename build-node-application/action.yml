@@ -40,5 +40,5 @@ runs:
       shell: bash
       run: |
         cd ${{ inputs.directory }}
-        npm ci
+        npm ci --production
         npm run ${{ inputs.npm-run-command }}
